@@ -1,18 +1,46 @@
-<?php 
-    include_once("config/url.php");
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda de contatos</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.1/css/bootstrap.min.css" integrity="sha512-Z/def5z5u2aR89OuzYcxmDJ0Bnd5V1cKqBEbvLOiUNWdg9PQeXVvXLI90SE4QOHGlfLqUnDNVAYyZi8UwUTmWQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="<?=$BASE_URL?>css/style.css">
-</head>
-<body>
-    <h1>teste</h1>
-    <i class="fas fa-eye"></i>
-</body>
-</html>
+<?php include_once("templates/header.php")?>
+    
+    <div class="container">
+        
+        <?php if(isset($printMsg) && $printMsg != ""):?>
+            <p id="msg"><?= $printMsg ?></p>
+        <?php endif;?>
+
+        <h1 id="main-title">Minha agenda</h1>
+
+        <?php if(count($contacts) > 0):?>
+            <table class="table" id="contacts-table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Telefone</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($contacts AS $contact):?>
+                        <tr>
+                            <td scope="row" class="col-id"><?=$contact['id']?></td>
+                            <td scope="row"><?=$contact['name']?></td>
+                            <td scope="row"><?=$contact['phone']?></td>
+                            <td class="actions">
+                                <a href="<?=$BASE_URL?>show.php?id=<?=$contact['id']?>"><i class="fas fa-eye check-icon"></i></a>
+                                <a href="<?=$BASE_URL?>edit.php?id=<?=$contact['id']?>"><i class="far fa-edit edit-icon"></i></a>
+
+                                <form class="delete-form" action="<?=$BASE_URL?>config/process.php" method="post">
+                                    <input type="hidden" name="type" value="delete">
+                                    <input type="hidden" name="id" value="<?=$contact['id']?>">
+                                    <button type="submit" class="delete-btn"><i class="fas fa-times delete-icon"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach;?>
+                </tbody>
+            </table>
+        <?php else:?>
+            <p id="empty-list-text">Ainda não há contatos na sua agenda, <a href="<?=$BASE_URL?>create.php">Clique aqui para adicionar</a></p>
+        <?php endif;?>
+    </div>
+
+<?php include_once("templates/footer.php")?>
