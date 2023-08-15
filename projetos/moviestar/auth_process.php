@@ -70,7 +70,22 @@
 
     }else if ($type === 'login'){
 
+        $email = filter_input(INPUT_POST, "email");
+        $password = filter_input(INPUT_POST, "password");
 
+        if($UserDAO->authenticateUser($email, $password)){
+
+            
+
+        }else{
+
+            $message->setMessage("Usuario ou senha incorreta","error","back");
+
+        }
+
+    }else{
+
+        $message->setMessage("Informações invalidas!","error","index.php");
 
     }
 

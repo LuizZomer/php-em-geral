@@ -1,12 +1,4 @@
-
-<?php 
-    include_once("connector.php");
-    include_once("dao/carDAO.php");
-
-    $carDao = new CarDAO($conn);
-
-    $cars = $carDao->findAll();
-?>
+<?php include_once("connector.php")?>
 
 <h1>Insira um carro:</h1>
 <form action="process.php" method="post">
@@ -24,8 +16,3 @@
     </div>
     <input type="submit" value="Salvar">
 </form>
-<ul>
-    <?php foreach($cars as $car):?>
-        <li><?=$car->getBrand()?> - <?=$car->getKm()?> - <?=$car->getColor()?></li>
-    <?php endforeach?>
-</ul>

@@ -62,9 +62,52 @@
 
         public function findByToken($token){
 
+            if($token != ""){
+                $stmt = $this->conn->prepare("SELECT * FROM users WHERE token = :token");
+
+                $stmt->bindParam(":token",$token);
+
+                $stmt->execute();
+
+                if($stmt->rowCount() > 0){
+
+                    $data = $stmt->fetch();
+                    $user = $this->buildUser($data);
+
+                    return $user;
+
+                }else{
+
+                    return false;
+
+                }
+
+            }else{
+                return false;
+            }
+
         }
         
         public function verifyToken($protected = false){
+
+            if(!empty($_SESSION["token"])){
+
+                $token = $_SESSION["token"];
+                $user = $this->findByToken($token);
+
+                if($user) {
+                    return $user;
+                }else if($protected){
+
+                    $this->message->setMessage("Faça a autenticação para acessar essa pagina","error","index.php");
+
+                }
+
+            }else if($protected){
+
+                $this->message->setMessage("Faça a autenticação para acessar essa pagina","error","index.php");
+
+            }
 
         }
         
@@ -82,6 +125,35 @@
         }
         
         public function authenticateUser($email, $password){
+
+            $user = $this->findByEmail($email);
+
+            if($user){
+
+                if(password_verify($password, $user->password)){
+                 
+                    // gerar token
+                    $token = $user->generateToken();
+
+                    $this->setTokenToSession($token);
+
+                    // atualizar token do usuario
+
+                    $user->token = $token;
+
+                    $this->update($user);
+
+                }else{
+
+                    return false;
+
+                }
+
+            }else{
+
+                return false;
+
+            }
 
         }
         
@@ -110,6 +182,14 @@
             }else{
                 return false;
             }
+
+        }
+
+        public function destroyToken(){
+
+            $_SESSION["token"] = "";
+
+            $this->message->setMessage("Você fez o logout com sucesso!","success","index.php");
 
         }
 

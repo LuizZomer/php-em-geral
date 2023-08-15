@@ -6,7 +6,7 @@
         <div class="row" id="auth-row">
             <div class="col-md-4" id="login-container">
                 <h2>Entrar</h2>
-                <form action="" method="post">
+                <form action="auth_process.php" method="post">
                 <input type="hidden" name="type" value="login">
 
                     <div class="form-group">
